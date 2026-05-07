@@ -73,7 +73,7 @@ class RpcClient(object):
         return message.correlation_id
 
 
-RPC_CLIENT = RpcClient(rpc_queue='new_rpc_queue_cloud')
+RPC_CLIENT = RpcClient(rpc_queue='new_rpc_queue_cloud_v2')
 
 @app.route('/')
 def home():
