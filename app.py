@@ -15,7 +15,7 @@ AMQP_CONFIG = {
     "port": 5671,
     "ssl": True,
     "ssl_options": {"server_hostname": "horse.lmq.cloudamqp.com"},
-    "heartbeat": 60
+    "heartbeat": 120
 }
 
 class RpcClient(object):
@@ -57,6 +57,9 @@ class RpcClient(object):
             self.channel.start_consuming(to_tuple=False)
         except Exception as e:
             print(f"[!] Hilo consumidor caído: {e}")
+            sleep(2)
+            print("[*] Reconectando cliente...")
+            self.open()
 
     def _on_response(self, message):
         self.queue[message.correlation_id] = message.body
