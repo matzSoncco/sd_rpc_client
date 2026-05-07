@@ -66,10 +66,16 @@ class RpcClient(object):
             print("[*] Reconectando cliente...")
             self.open()
 
+        print(f"[DEBUG] Enviando payload: {payload}")
+        print(f"[DEBUG] Cola destino: {self.rpc_queue}")
+        print(f"[DEBUG] Cola callback: {self.callback_queue}")
+        
         message = Message.create(self.channel, payload)
         message.reply_to = self.callback_queue
         self.queue[message.correlation_id] = None
         message.publish(routing_key=self.rpc_queue)
+        
+        print(f"[DEBUG] Mensaje publicado con corr_id: {message.correlation_id}")
         return message.correlation_id
 
 
@@ -81,7 +87,9 @@ def home():
 
 @app.route('/rpc_call/<payload>')
 def rpc_call(payload):
+    print(f"[DEBUG] Iniciando rpc_call con payload: {payload}")
     corr_id = RPC_CLIENT.send_request(payload)
+    print(f"[DEBUG] Esperando respuesta para corr_id: {corr_id}")
 
     timeout = 0
     while RPC_CLIENT.queue[corr_id] is None:
@@ -89,6 +97,7 @@ def rpc_call(payload):
         timeout += 1
         if timeout > 200:
             del RPC_CLIENT.queue[corr_id]
+            print(f"[DEBUG] TIMEOUT para corr_id: {corr_id}")
             return "Error: Timeout - El servicio backend no responde."
 
     respuesta = RPC_CLIENT.queue[corr_id]
