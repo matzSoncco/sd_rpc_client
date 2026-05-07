@@ -77,7 +77,7 @@ RPC_CLIENT = RpcClient(
     username='jrynbgfw',
     password='fW12mOLo5JzmtTd_gJx83y04HCCxl3hS',
     virtual_host='jrynbgfw',
-    rpc_queue='vilef_rpc_queue'
+    rpc_queue='new_rpc_queue_cloud'
 )
 
 @app.route('/')
