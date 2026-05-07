@@ -94,7 +94,7 @@ def rpc_call(payload):
     while RPC_CLIENT.queue[corr_id] is None:
         sleep(0.1)
         timeout += 1
-        if timeout > 50:
+        if timeout > 200:
             return "Error: Timeout - El servicio backend no responde."
 
     respuesta = RPC_CLIENT.queue[corr_id]
